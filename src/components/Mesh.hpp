@@ -1,0 +1,31 @@
+#pragma once
+
+#include <vector>
+#include <glm/glm.hpp>
+
+#include "AABB.hpp"
+#include "SubMesh.hpp"
+#include "base/Component.hpp"
+#include "base/Node.hpp"
+
+class Mesh : public Component {
+private:
+	Node*                 node{nullptr};
+	AABB                  bounds;
+	std::vector<SubMesh*> submeshes;
+
+public:
+	Mesh(const std::string& name);
+	virtual ~Mesh() = default;
+
+	virtual std::type_index getType() override;
+
+	auto getNode() const -> Node*;
+	void setNode(Node& node);
+
+	auto getBounds() const -> const AABB&;
+	void updateBounds(const std::vector<glm::vec3>& vertex_data, const std::vector<unsigned int>& index_data = {});
+
+	auto getSubmeshes() const -> const std::vector<SubMesh*>&;
+	void addSubmesh(SubMesh& submesh);
+};
