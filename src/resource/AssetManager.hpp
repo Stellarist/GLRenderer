@@ -1,7 +1,5 @@
 #pragma once
 
-#include <print>
-#include <filesystem>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -27,13 +25,17 @@ private:
 
 	AssetManager();
 	~AssetManager();
-	AssetManager(const AssetManager&) = delete;
-	AssetManager& operator=(const AssetManager&) = delete;
 
 	void cleanup();
 
 public:
 	static AssetManager& instance();
+
+	AssetManager(const AssetManager&) = delete;
+	AssetManager& operator=(const AssetManager&) = delete;
+
+	AssetManager(AssetManager&&) noexcept = delete;
+	AssetManager& operator=(AssetManager&&) noexcept = delete;
 
 	void setScene(std::shared_ptr<Scene> scene);
 

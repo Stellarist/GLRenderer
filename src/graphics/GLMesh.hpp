@@ -1,6 +1,5 @@
 #pragma once
 
-#include "components/Mesh.hpp"
 #include "GLBuffer.hpp"
 #include "GLTexture.hpp"
 #include "GLShader.hpp"
@@ -22,8 +21,10 @@ public:
 	GLMesh(GLMesh& other) = delete;
 	GLMesh& operator=(GLMesh& other) = delete;
 
-	GLMesh(GLMesh&& other);
-	GLMesh& operator=(GLMesh&& other);
+	GLMesh(GLMesh&& other) noexcept;
+	GLMesh& operator=(GLMesh&& other) noexcept;
+
+	~GLMesh() = default;
 
 	void bind() const;
 	void unbind() const;

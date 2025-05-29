@@ -27,7 +27,7 @@ GLTexture::GLTexture(
 	upload(data, width, height);
 }
 
-GLTexture::GLTexture(GLTexture&& other) :
+GLTexture::GLTexture(GLTexture&& other) noexcept :
     id(other.id),
     format(other.format),
     data_type(other.data_type)
@@ -35,7 +35,7 @@ GLTexture::GLTexture(GLTexture&& other) :
 	other.id = 0;
 }
 
-GLTexture& GLTexture::operator=(GLTexture&& other)
+GLTexture& GLTexture::operator=(GLTexture&& other) noexcept
 {
 	if (this != &other) {
 		if (id)
@@ -59,10 +59,10 @@ GLTexture::~GLTexture()
 	}
 }
 
-void GLTexture::upload(const void* data, int width, int height)
+void GLTexture::upload(const void* data, int width, int height) const
 {
 	bind();
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height,
+	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(format), width, height,
 	             0, format, data_type, data);
 	unbind();
 }
@@ -77,7 +77,7 @@ void GLTexture::bind() const
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void GLTexture::unbind() const
+void GLTexture::unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

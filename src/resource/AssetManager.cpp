@@ -2,6 +2,9 @@
 
 #include "AssetManager.hpp"
 
+#include <print>
+#include <filesystem>
+
 AssetManager::AssetManager()
 {
 	scene = nullptr;
@@ -52,9 +55,9 @@ void AssetManager::cleanup()
 	scene.reset();
 }
 
-Image* AssetManager::getImage(const std::string& path)
+Image* AssetManager::getImage(const std::string& name)
 {
-	auto it = loaded_images.find(path);
+	auto it = loaded_images.find(name);
 	if (it != loaded_images.end())
 		return it->second;
 
@@ -80,7 +83,7 @@ Image* AssetManager::createImage(const std::vector<uint8_t>& data, const std::st
 
 Image* AssetManager::loadImage(const std::string& raw_path)
 {
-	int width, height, channels;
+	int width = 0, height = 0, channels = 0;
 
 	std::string path = std::filesystem::canonical(raw_path).string();
 	if (Image* image = getImage(path); image)
@@ -100,9 +103,9 @@ Image* AssetManager::loadImage(const std::string& raw_path)
 	return new_image;
 }
 
-Texture* AssetManager::getTexture(const std::string& path)
+Texture* AssetManager::getTexture(const std::string& name)
 {
-	auto it = loaded_textures.find(path);
+	auto it = loaded_textures.find(name);
 	if (it != loaded_textures.end())
 		return it->second;
 
@@ -173,7 +176,7 @@ Material* AssetManager::createMaterial(aiMaterial* ai_material, const aiScene* a
 
 	if (float opacity = 1.0f; ai_material->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS)
 		if (opacity < 1.0f) {
-			material->setAlphaMode(AlphaMode::Blend);
+			material->setAlphaMode(AlphaMode::BLEND);
 			material->setAlphaCutoff(opacity);
 		}
 

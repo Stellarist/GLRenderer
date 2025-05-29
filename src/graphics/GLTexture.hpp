@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <utility>
 #include <glad/glad.h>
 
 struct GLTexture {
@@ -16,19 +16,20 @@ struct GLTexture {
 	GLTexture(const GLTexture&) = delete;
 	GLTexture& operator=(const GLTexture&) = delete;
 
-	GLTexture(GLTexture&& other);
-	GLTexture& operator=(GLTexture&& other);
+	GLTexture(GLTexture&& other) noexcept;
+	GLTexture& operator=(GLTexture&& other) noexcept;
 
 	~GLTexture();
 
 	unsigned int getId() const;
 
-	void upload(const void* data, int width, int height);
+	void upload(const void* data, int width, int height) const;
 
-	void bind() const;
-	void unbind() const;
-	void activate(unsigned int unit) const;
-	void deactivate(unsigned int unit);
+	void        bind() const;
+	static void unbind();
+
+	void        activate(unsigned int unit) const;
+	static void deactivate(unsigned int unit);
 
 	void setParameteri(std::initializer_list<std::pair<int, int>> param) const;
 	void generateMipmap() const;

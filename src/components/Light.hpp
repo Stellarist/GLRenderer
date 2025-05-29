@@ -1,8 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include <typeinfo>
 #include <glm/glm.hpp>
 
 #include "base/Component.hpp"
@@ -16,10 +14,16 @@ private:
 
 public:
 	Light(const std::string& name);
-	Light(Light&& other) = default;
-	virtual ~Light() = default;
 
-	virtual std::type_index getType() override;
+	Light(const Light&) = delete;
+	Light& operator=(const Light&) = delete;
+
+	Light(Light&& other) noexcept = default;
+	Light& operator=(Light&& other) noexcept = default;
+
+	~Light() override = default;
+
+	std::type_index getType() override;
 
 	Node* getNode();
 	void  setNode(Node& node);
@@ -37,9 +41,16 @@ private:
 
 public:
 	DirectionalLight(const std::string& name);
-	virtual ~DirectionalLight() = default;
 
-	virtual std::type_index getType() override;
+	DirectionalLight(const DirectionalLight&) = delete;
+	DirectionalLight& operator=(const DirectionalLight&) = delete;
+
+	DirectionalLight(DirectionalLight&& other) = default;
+	DirectionalLight& operator=(DirectionalLight&& other) = default;
+
+	~DirectionalLight() override = default;
+
+	std::type_index getType() override;
 
 	glm::vec3 getDirection() const;
 	void      setDirection(const glm::vec3& direction);
@@ -51,9 +62,16 @@ private:
 
 public:
 	PointLight(const std::string& name);
-	virtual ~PointLight() = default;
 
-	virtual std::type_index getType() override;
+	PointLight(const PointLight&) = delete;
+	PointLight& operator=(const PointLight&) = delete;
+
+	PointLight(PointLight&& other) noexcept = default;
+	PointLight& operator=(PointLight&& other) noexcept = default;
+
+	~PointLight() override = default;
+
+	std::type_index getType() override;
 
 	float getRange() const;
 	void  setRange(float range);
@@ -68,9 +86,15 @@ private:
 
 public:
 	SpotLight(const std::string& name);
-	virtual ~SpotLight() = default;
+	~SpotLight() override = default;
 
-	virtual std::type_index getType() override;
+	SpotLight(const SpotLight&) = delete;
+	SpotLight& operator=(const SpotLight&) = delete;
+
+	SpotLight(SpotLight&& other) noexcept = default;
+	SpotLight& operator=(SpotLight&& other) noexcept = default;
+
+	std::type_index getType() override;
 
 	glm::vec3 getDirection() const;
 	void      setDirection(const glm::vec3& direction);

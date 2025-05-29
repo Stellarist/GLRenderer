@@ -1,5 +1,7 @@
 #include "GraphicsManager.hpp"
 
+#include <print>
+
 GraphicsManager::GraphicsManager()
 {
 	scene = nullptr;
@@ -49,7 +51,7 @@ GLTexture* GraphicsManager::uploadGLTexture(Texture* texture)
 	if (auto* gl_tex = getGLTexture(texture->getName()); gl_tex)
 		return gl_tex;
 
-	int          channels = texture->getImage()->getFormat();
+	unsigned int channels = texture->getImage()->getFormat();
 	unsigned int format = 0;
 	if (channels == 1)
 		format = GL_RED;
@@ -113,7 +115,7 @@ void GraphicsManager::uploadMesh(Mesh& mesh)
 	for (const auto& submesh : mesh.getSubmeshes()) {
 		GLMesh gl_mesh(submesh);
 		for (const auto& [name, texture] : submesh->getMaterial()->getTextures())
-			if (auto tex = uploadGLTexture(texture); tex)
+			if (auto* tex = uploadGLTexture(texture); tex)
 				gl_mesh.setTexture(name, *tex);
 		gl_meshes[&mesh].emplace_back(std::move(gl_mesh));
 	}

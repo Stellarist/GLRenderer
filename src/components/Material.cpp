@@ -19,7 +19,7 @@ void Material::setEmissive(const glm::vec3& emissive)
 	this->emissive = emissive;
 }
 
-bool Material::getDoubleSided()
+bool Material::getDoubleSided() const
 {
 	return double_sided;
 }
@@ -29,7 +29,7 @@ void Material::setDoubleSided(bool double_sided)
 	this->double_sided = double_sided;
 }
 
-float Material::getAlphaCutoff()
+float Material::getAlphaCutoff() const
 {
 	return alpha_cutoff;
 }

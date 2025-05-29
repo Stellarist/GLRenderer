@@ -79,7 +79,7 @@ void Transform::updateWorldTransform()
 		return;
 
 	world_matrix = getMatrix();
-	if (auto parent = node.getParent(); parent) {
+	if (auto* parent = node.getParent(); parent) {
 		auto& transform = parent->getComponent<Transform>();
 		world_matrix = transform.getWorldMatrix() * world_matrix;
 	}

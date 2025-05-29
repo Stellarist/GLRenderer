@@ -1,8 +1,8 @@
 #include "Node.hpp"
 
-Node::Node(const size_t id, const std::string& name) :
+Node::Node(size_t id, std::string name) :
     id(id),
-    name(name),
+    name(std::move(name)),
     transform(*this)
 {
 	setComponent(transform);
@@ -13,7 +13,7 @@ std::type_index Node::getType()
 	return typeid(Node);
 }
 
-const size_t Node::getId() const
+size_t Node::getId() const
 {
 	return id;
 }

@@ -1,13 +1,15 @@
 #include "AABB.hpp"
 
-AABB::AABB()
+AABB::AABB() :
+    min(0.0f),
+    max(0.0f)
 {
 	reset();
 }
 
 AABB::AABB(const glm::vec3& min, const glm::vec3& max) :
-    min{min},
-    max{max}
+    min(min),
+    max(max)
 {}
 
 std::type_index AABB::getType()
@@ -24,11 +26,11 @@ void AABB::update(const glm::vec3& point)
 void AABB::update(const std::vector<glm::vec3>& vertex_data, const std::vector<unsigned int>& index_data)
 {
 	if (index_data.size() > 0)
-		for (size_t index_id = 0; index_id < index_data.size(); index_id++)
-			update(vertex_data[index_data[index_id]]);
+		for (unsigned int index_id : index_data)
+			update(vertex_data[index_id]);
 	else
-		for (size_t vertex_id = 0; vertex_id < vertex_data.size(); vertex_id++)
-			update(vertex_data[vertex_id]);
+		for (auto vertex_id : vertex_data)
+			update(vertex_id);
 }
 
 void AABB::transform(const glm::mat4& transform)

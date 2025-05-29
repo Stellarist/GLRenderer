@@ -1,10 +1,8 @@
 #pragma once
 
-#include <memory>
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <typeinfo>
 
 #include "base/Component.hpp"
 #include "Material.hpp"
@@ -33,9 +31,16 @@ private:
 
 public:
 	SubMesh(const std::string& name = {});
-	virtual ~SubMesh() = default;
 
-	virtual std::type_index getType() override;
+	SubMesh(const SubMesh&) = delete;
+	SubMesh& operator=(const SubMesh&) = delete;
+
+	SubMesh(SubMesh&&) noexcept = default;
+	SubMesh& operator=(SubMesh&&) noexcept = default;
+
+	~SubMesh() override = default;
+
+	std::type_index getType() override;
 
 	unsigned int getVerticesCount() const;
 	unsigned int getIndicesCount() const;

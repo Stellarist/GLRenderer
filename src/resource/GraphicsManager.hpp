@@ -1,6 +1,5 @@
 #pragma once
 
-#include <print>
 #include <unordered_map>
 
 #include "base/Scene.hpp"
@@ -17,12 +16,16 @@ private:
 
 	GraphicsManager();
 	~GraphicsManager();
-	GraphicsManager(const GraphicsManager&) = delete;
-	GraphicsManager& operator=(const GraphicsManager&) = delete;
 
 	void cleanup();
 
 public:
+	GraphicsManager(const GraphicsManager&) = delete;
+	GraphicsManager& operator=(const GraphicsManager&) = delete;
+
+	GraphicsManager(GraphicsManager&&) noexcept = delete;
+	GraphicsManager& operator=(GraphicsManager&&) noexcept = delete;
+
 	static GraphicsManager& instance();
 
 	void setScene(std::shared_ptr<Scene> scene);

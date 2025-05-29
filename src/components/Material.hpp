@@ -1,44 +1,48 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include <typeinfo>
 #include <unordered_map>
 #include <glm/glm.hpp>
 
 #include "base/Component.hpp"
 #include "Texture.hpp"
 
-enum class AlphaMode {
-	Opaque,
-	Mask,
-	Blend,
-	Other
+enum class AlphaMode : uint8_t {
+	OPAQUE,
+	MASK,
+	BLEND,
+	OTHER
 };
 
 class Material : public Component {
 private:
 	glm::vec3 emissive{0.0f, 0.0f, 0.0f};
 	bool      double_sided{false};
-	float     alpha_cutoff{0.5f};
-	AlphaMode alpha_mode{AlphaMode::Opaque};
+	float     alpha_cutoff{0.0f};
+	AlphaMode alpha_mode{AlphaMode::OPAQUE};
 
 	std::unordered_map<std::string, Texture*> textures;
 
 public:
 	Material(const std::string& name);
-	Material(Material&& other) = default;
-	virtual ~Material() = default;
 
-	virtual std::type_index getType() override;
+	Material(const Material&) = delete;
+	Material& operator=(const Material&) = delete;
+
+	Material(Material&& other) noexcept = default;
+	Material& operator=(Material&& other) noexcept = default;
+
+	~Material() override = default;
+
+	std::type_index getType() override;
 
 	auto getEmissive() -> glm::vec3;
 	void setEmissive(const glm::vec3& emissive);
 
-	bool getDoubleSided();
+	bool getDoubleSided() const;
 	void setDoubleSided(bool double_sided);
 
-	float getAlphaCutoff();
+	float getAlphaCutoff() const;
 	void  setAlphaCutoff(float alpha_cutoff);
 
 	auto getAlphaMode() -> AlphaMode;
@@ -57,9 +61,16 @@ private:
 
 public:
 	PBRMaterial(const std::string& name);
-	virtual ~PBRMaterial() = default;
 
-	virtual std::type_index getType() override;
+	PBRMaterial(const PBRMaterial&) = delete;
+	PBRMaterial& operator=(const PBRMaterial&) = delete;
+
+	PBRMaterial(PBRMaterial&& other) noexcept = default;
+	PBRMaterial& operator=(PBRMaterial&& other) noexcept = default;
+
+	~PBRMaterial() override = default;
+
+	std::type_index getType() override;
 
 	auto setBaseColorFactor(const glm::vec4& base_color_factor) -> void;
 	auto getBaseColorFactor() const -> glm::vec4;

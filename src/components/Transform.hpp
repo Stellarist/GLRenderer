@@ -20,6 +20,13 @@ private:
 
 public:
 	Transform(Node& node);
+
+	Transform(const Transform&) = default;
+	Transform& operator=(const Transform&) = delete;
+
+	Transform(Transform&&) noexcept = default;
+	Transform& operator=(Transform&&) noexcept = delete;
+
 	virtual ~Transform() = default;
 
 	virtual std::type_index getType() override;

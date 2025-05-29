@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <glad/glad.h>
 
 #include "components/SubMesh.hpp"
@@ -15,18 +14,18 @@ struct GLBuffer {
 	GLBuffer();
 	GLBuffer(const T* data, unsigned int count);
 
-	GLBuffer(GLBuffer&& other);
-	GLBuffer& operator=(GLBuffer&& other);
-
 	GLBuffer(const GLBuffer& other) = delete;
 	GLBuffer& operator=(const GLBuffer& other) = delete;
+
+	GLBuffer(GLBuffer&& other) noexcept;
+	GLBuffer& operator=(GLBuffer&& other) noexcept;
 
 	~GLBuffer();
 
 	unsigned int getId();
 
-	void bind() const;
-	void unbind() const;
+	void        bind() const;
+	static void unbind();
 
 	void update(const T* data, unsigned int new_count);
 	void clear();
@@ -44,16 +43,16 @@ public:
 
 	VertexArray();
 
-	VertexArray(VertexArray&& other);
-	VertexArray& operator=(VertexArray&& other);
-
 	VertexArray(const VertexArray& other) = delete;
 	VertexArray& operator=(const VertexArray& other) = delete;
 
+	VertexArray(VertexArray&& other) noexcept;
+	VertexArray& operator=(VertexArray&& other) noexcept;
+
 	~VertexArray();
 
-	void bind() const;
-	void unbind() const;
+	void        bind() const;
+	static void unbind();
 
 	void pushAttribute(unsigned int count);
 	void pushAttribute(VertexAttribute&& attribute);
@@ -78,7 +77,7 @@ GLBuffer<T, Target, Usage>::GLBuffer(const T* data, unsigned int count) :
 }
 
 template <typename T, unsigned int Target, unsigned int Usage>
-GLBuffer<T, Target, Usage>::GLBuffer(GLBuffer&& other) :
+GLBuffer<T, Target, Usage>::GLBuffer(GLBuffer&& other) noexcept :
     id(other.id), count(other.count)
 {
 	other.id = 0;
@@ -86,7 +85,7 @@ GLBuffer<T, Target, Usage>::GLBuffer(GLBuffer&& other) :
 }
 
 template <typename T, unsigned int Target, unsigned int Usage>
-auto GLBuffer<T, Target, Usage>::operator=(GLBuffer&& other) -> GLBuffer&
+auto GLBuffer<T, Target, Usage>::operator=(GLBuffer&& other) noexcept -> GLBuffer&
 {
 	if (this != &other) {
 		if (id)
@@ -123,7 +122,7 @@ void GLBuffer<T, Target, Usage>::bind() const
 }
 
 template <typename T, unsigned int Target, unsigned int Usage>
-void GLBuffer<T, Target, Usage>::unbind() const
+void GLBuffer<T, Target, Usage>::unbind()
 {
 	glBindBuffer(Target, 0);
 }

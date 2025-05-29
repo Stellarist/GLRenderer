@@ -1,13 +1,18 @@
 #include "GLShader.hpp"
 
+#include <print>
+#include <array>
+#include <fstream>
+#include <sstream>
+
 GLShader::GLShader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path) :
     id(0)
 {
 	std::string   vertex_source, fragment_source, geometry_source;
 	std::ifstream vertex_file, fragment_file, geometry_file;
-	vertex_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-	fragment_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-	geometry_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	vertex_file.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+	fragment_file.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+	geometry_file.exceptions(std::ios_base::failbit | std::ios_base::badbit);
 
 	try {
 		vertex_file.open(vertex_path);
@@ -26,25 +31,25 @@ GLShader::GLShader(const std::string& vertex_path, const std::string& fragment_p
 			geometry_file.close();
 			geometry_source = geometry_stream.str();
 		}
-	} catch (std::ifstream::failure e) {
+	} catch (const std::ifstream::failure& e) {
 		std::println("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: {}", e.what());
 	}
 
-	unsigned int vertex;
+	unsigned int vertex = 0;
 	const char*  vertex_code = vertex_source.c_str();
 	vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &vertex_code, nullptr);
 	glCompileShader(vertex);
 	checkCompileErrors(vertex, "VERTEX");
 
-	unsigned int fragment;
+	unsigned int fragment = 0;
 	const char*  fragment_code = fragment_source.c_str();
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &fragment_code, nullptr);
 	glCompileShader(fragment);
 	checkCompileErrors(fragment, "FRAGMENT");
 
-	unsigned int geometry;
+	unsigned int geometry = 0;
 	if (!geometry_path.empty()) {
 		const char* geometry_code = geometry_source.c_str();
 		geometry = glCreateShader(GL_GEOMETRY_SHADER);
@@ -67,13 +72,13 @@ GLShader::GLShader(const std::string& vertex_path, const std::string& fragment_p
 		glDeleteShader(geometry);
 }
 
-GLShader::GLShader(GLShader&& other) :
+GLShader::GLShader(GLShader&& other) noexcept :
     id(other.id)
 {
 	other.id = 0;
 }
 
-GLShader& GLShader::operator=(GLShader&& other)
+GLShader& GLShader::operator=(GLShader&& other) noexcept
 {
 	if (this != &other) {
 		if (id)
@@ -163,19 +168,21 @@ void GLShader::setMat4(const std::string& name, const glm::mat4& mat) const
 
 void GLShader::checkCompileErrors(unsigned int shader, std::string type)
 {
-	int  success;
-	char info_log[1024];
+	int           success = 0;
+	constexpr int ARRAY_SIZE = 1024;
+
+	std::array<char, ARRAY_SIZE> info_log{};
 	if (type != "PROGRAM") {
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if (!success) {
-			glGetShaderInfoLog(shader, 1024, nullptr, info_log);
-			std::println("ERROR::SHADER_COMPILATION_ERROR of type: {}\n \t{}\n", type, info_log);
+			glGetShaderInfoLog(shader, ARRAY_SIZE, nullptr, info_log.data());
+			std::println("ERROR::SHADER_COMPILATION_ERROR of type: {}\n \t{}\n", type, info_log.data());
 		}
 	} else {
 		glGetProgramiv(shader, GL_LINK_STATUS, &success);
 		if (!success) {
-			glGetProgramInfoLog(shader, 1024, nullptr, info_log);
-			std::println("ERROR::PROGRAM_LINKING_ERROR of type: {}\n \t{}\n", type, info_log);
+			glGetProgramInfoLog(shader, ARRAY_SIZE, nullptr, info_log.data());
+			std::println("ERROR::PROGRAM_LINKING_ERROR of type: {}\n \t{}\n", type, info_log.data());
 		}
 	}
 }

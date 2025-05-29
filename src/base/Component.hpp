@@ -11,11 +11,17 @@ private:
 
 public:
 	Component() = default;
-	Component(const std::string& name);
-	Component(Component&&) = default;
-	virtual ~Component() = default;
+	Component(std::string name);
 
-	virtual std::type_index getType() = 0;
+	Component(const Component&) = default;
+	Component& operator=(Component&) = default;
+
+	Component(Component&&) noexcept = default;
+	Component& operator=(Component&&) noexcept = default;
+
+	~Component() override = default;
+
+	std::type_index getType() override = 0;
 
 	auto getName() const -> const std::string&;
 	void setName(const std::string& name);

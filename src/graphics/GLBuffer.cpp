@@ -6,14 +6,14 @@ VertexArray::VertexArray() :
 	glGenVertexArrays(1, &id);
 }
 
-VertexArray::VertexArray(VertexArray&& other) :
+VertexArray::VertexArray(VertexArray&& other) noexcept :
     id(other.id), stride(other.stride), attributes(std::move(other.attributes))
 {
 	other.id = 0;
 	other.stride = 0;
 }
 
-VertexArray& VertexArray::operator=(VertexArray&& other)
+VertexArray& VertexArray::operator=(VertexArray&& other) noexcept
 {
 	if (this != &other) {
 		if (id)
@@ -43,7 +43,7 @@ void VertexArray::bind() const
 	glBindVertexArray(id);
 }
 
-void VertexArray::unbind() const
+void VertexArray::unbind()
 {
 	glBindVertexArray(0);
 }
@@ -70,10 +70,10 @@ void VertexArray::addBuffer(const VertexBuffer& vbo)
 	for (const auto& attribute : attributes) {
 		glEnableVertexAttribArray(attribute_index);
 		glVertexAttribPointer(attribute_index++,
-		                      attribute.count,
+		                      static_cast<GLint>(attribute.count),
 		                      attribute.format,
 		                      GL_FALSE,
-		                      stride,
+		                      static_cast<GLsizei>(stride),
 		                      reinterpret_cast<const void*>(static_cast<std::uintptr_t>(attribute.offset)));
 	}
 }

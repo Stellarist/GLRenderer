@@ -19,12 +19,19 @@ private:
 	std::unordered_map<std::type_index, Component*> components;
 
 public:
-	Node(const size_t id, const std::string& name);
-	virtual ~Node() = default;
+	Node(size_t id, std::string name);
 
-	virtual std::type_index getType() override;
+	Node(const Node&) = delete;
+	Node& operator=(Node&) = delete;
 
-	const size_t getId() const;
+	Node(Node&&) noexcept = delete;
+	Node& operator=(Node&&) noexcept = delete;
+
+	~Node() override = default;
+
+	std::type_index getType() override;
+
+	size_t getId() const;
 
 	const std::string& getName() const;
 	void               setName(const std::string& name);

@@ -16,9 +16,16 @@ private:
 
 public:
 	Mesh(const std::string& name);
-	virtual ~Mesh() = default;
 
-	virtual std::type_index getType() override;
+	Mesh(const Mesh&) = delete;
+	Mesh& operator=(const Mesh&) = delete;
+
+	Mesh(Mesh&&) noexcept = default;
+	Mesh& operator=(Mesh&&) noexcept = default;
+
+	~Mesh() override = default;
+
+	std::type_index getType() override;
 
 	auto getNode() const -> Node*;
 	void setNode(Node& node);

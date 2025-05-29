@@ -1,7 +1,7 @@
 #include "Component.hpp"
 
-Component::Component(const std::string& name) :
-    name(name)
+Component::Component(std::string name) :
+    name(std::move(name))
 {}
 
 const std::string& Component::getName() const

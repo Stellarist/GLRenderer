@@ -1,10 +1,6 @@
 #pragma once
 
-#include <memory>
 #include <string>
-#include <vector>
-#include <typeinfo>
-#include <stdexcept>
 #include <glm/glm.hpp>
 
 #include "Transform.hpp"
@@ -18,9 +14,16 @@ private:
 
 public:
 	Camera(const std::string& name);
-	virtual ~Camera() = default;
 
-	virtual std::type_index getType() override;
+	Camera(const Camera&) = default;
+	Camera& operator=(const Camera&) = delete;
+
+	Camera(Camera&&) noexcept = default;
+	Camera& operator=(Camera&&) noexcept = default;
+
+	~Camera() override = default;
+
+	std::type_index getType() override;
 
 	virtual glm::mat4 getProjection() = 0;
 
@@ -42,9 +45,17 @@ private:
 
 public:
 	PerspectiveCamera(const std::string& name);
-	virtual ~PerspectiveCamera() = default;
+	PerspectiveCamera(const std::string& name, float fov, float aspect_ratio, float near_plane, float far_plane);
 
-	virtual std::type_index getType() override;
+	PerspectiveCamera(const PerspectiveCamera&) = default;
+	PerspectiveCamera& operator=(const PerspectiveCamera&) = delete;
+
+	PerspectiveCamera(PerspectiveCamera&&) noexcept = default;
+	PerspectiveCamera& operator=(PerspectiveCamera&&) noexcept = default;
+
+	~PerspectiveCamera() override = default;
+
+	std::type_index getType() override;
 
 	float getFarPlane() const;
 	void  setFarPlane(float zfar);
@@ -58,7 +69,7 @@ public:
 	float getFov() const;
 	void  setFov(float fov);
 
-	virtual glm::mat4 getProjection() override;
+	glm::mat4 getProjection() override;
 };
 
 class OrthoCamera : public Camera {
@@ -73,9 +84,16 @@ private:
 public:
 	OrthoCamera(const std::string& name);
 	OrthoCamera(const std::string& name, float left, float right, float bottom, float top, float near_plane, float far_plane);
-	virtual ~OrthoCamera() = default;
 
-	virtual std::type_index getType() override;
+	OrthoCamera(const OrthoCamera&) = delete;
+	OrthoCamera& operator=(const OrthoCamera&) = delete;
+
+	OrthoCamera(OrthoCamera&&) noexcept = default;
+	OrthoCamera& operator=(OrthoCamera&&) noexcept = default;
+
+	~OrthoCamera() override = default;
+
+	std::type_index getType() override;
 
 	float getLeft() const;
 	void  setLeft(float left);
@@ -95,5 +113,5 @@ public:
 	float getFarPlane() const;
 	void  setFarPlane(float far_plane);
 
-	virtual glm::mat4 getProjection() override;
+	glm::mat4 getProjection() override;
 };

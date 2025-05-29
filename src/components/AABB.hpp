@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
 #include <vector>
-#include <typeinfo>
 #include <glm/glm.hpp>
 
 #include "base/Component.hpp"
@@ -15,9 +13,16 @@ private:
 public:
 	AABB();
 	AABB(const glm::vec3& min, const glm::vec3& max);
-	virtual ~AABB() = default;
 
-	virtual std::type_index getType() override;
+	AABB(const AABB&) = delete;
+	AABB& operator=(const AABB&) = delete;
+
+	AABB(AABB&&) noexcept = default;
+	AABB& operator=(AABB&&) noexcept = default;
+
+	~AABB() override = default;
+
+	std::type_index getType() override;
 
 	void update(const glm::vec3& point);
 	void update(const std::vector<glm::vec3>& vertex_data, const std::vector<unsigned int>& index_data);

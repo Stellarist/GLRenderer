@@ -1,9 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <string>
 #include <vector>
-#include <typeinfo>
 #include <glm/glm.hpp>
 
 #include "base/Component.hpp"
@@ -18,9 +16,16 @@ private:
 
 public:
 	Image(const std::string& name);
-	virtual ~Image() = default;
 
-	virtual std::type_index getType() override;
+	Image(const Image& other) = delete;
+	Image& operator=(const Image& other) = delete;
+
+	Image(Image&& other) noexcept = default;
+	Image& operator=(Image&& other) noexcept = default;
+
+	~Image() override = default;
+
+	std::type_index getType() override;
 
 	auto getData() const -> const std::vector<uint8_t>&;
 	void setData(const std::vector<uint8_t>& new_data);

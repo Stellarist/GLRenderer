@@ -46,7 +46,7 @@ GLMesh::GLMesh(SubMesh* submesh) :
 	vao.unbind();
 }
 
-GLMesh::GLMesh(GLMesh&& other) :
+GLMesh::GLMesh(GLMesh&& other) noexcept :
     submesh(other.submesh),
     vao(std::move(other.vao)),
     vbo(std::move(other.vbo)),
@@ -56,7 +56,7 @@ GLMesh::GLMesh(GLMesh&& other) :
 	other.submesh = nullptr;
 }
 
-GLMesh& GLMesh::operator=(GLMesh&& other)
+GLMesh& GLMesh::operator=(GLMesh&& other) noexcept
 {
 	if (this != &other) {
 		submesh = other.submesh;
@@ -116,6 +116,6 @@ void GLMesh::draw(GLShader& shader)
 		shader.setInt(uniform_name, static_cast<int>(texture_unit));
 		texture_unit++;
 	}
-	glDrawElements(GL_TRIANGLES, ibo.count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(ibo.count), GL_UNSIGNED_INT, 0);
 	unbind();
 }

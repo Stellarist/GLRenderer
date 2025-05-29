@@ -1,7 +1,11 @@
 #include "Scene.hpp"
 
-Scene::Scene(const std::string& name) :
-    name(name)
+#include <queue>
+
+#include "components/SubMesh.hpp"
+
+Scene::Scene(std::string name) :
+    name(std::move(name))
 {}
 
 Scene::Scene(int id, const std::string& name) :
@@ -95,17 +99,17 @@ bool Scene::hasComponent(const std::type_index& type) const
 
 Node* Scene::findNode(const std::string& name)
 {
-	for (auto node : root->getChildren()) {
+	for (auto* node : root->getChildren()) {
 		std::queue<Node*> traverse_node;
 		traverse_node.push(node);
 
 		while (!traverse_node.empty()) {
-			auto node = traverse_node.front();
+			auto* node = traverse_node.front();
 			traverse_node.pop();
 			if (node->getName() == name)
 				return node;
 
-			for (auto child_node : node->getChildren())
+			for (auto* child_node : node->getChildren())
 				traverse_node.push(child_node);
 		}
 	}

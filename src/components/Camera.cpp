@@ -1,7 +1,7 @@
 #include "Camera.hpp"
 
 Camera::Camera(const std::string& name) :
-    Component{name}
+    Component(name)
 {}
 
 std::type_index Camera::getType()
@@ -11,8 +11,7 @@ std::type_index Camera::getType()
 
 glm::mat4 Camera::getView()
 {
-	if (!node)
-		throw std::runtime_error{"Camera component is not attached to a node"};
+	assert(node && "Camera component must be attached to a node");
 
 	auto& transform = node->getComponent<Transform>();
 	return glm::inverse(transform.getWorldMatrix());
@@ -40,6 +39,14 @@ void Camera::setPreRotation(const glm::mat4& pre_rotation)
 
 PerspectiveCamera::PerspectiveCamera(const std::string& name) :
     Camera(name)
+{}
+
+PerspectiveCamera::PerspectiveCamera(const std::string& name, float fov, float aspect_ratio, float near_plane, float far_plane) :
+    Camera(name),
+    fov(fov),
+    aspect_ratio(aspect_ratio),
+    near_plane(near_plane),
+    far_plane(far_plane)
 {}
 
 std::type_index PerspectiveCamera::getType()

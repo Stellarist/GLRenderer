@@ -3,12 +3,10 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <queue>
 #include <typeindex>
 #include <algorithm>
 
 #include "Node.hpp"
-#include "components/SubMesh.hpp"
 
 class Scene : public Object {
 private:
@@ -22,11 +20,18 @@ private:
 
 public:
 	Scene() = default;
-	Scene(const std::string& name);
+	Scene(std::string name);
 	Scene(int id, const std::string& name);
-	virtual ~Scene() = default;
 
-	virtual std::type_index getType() override;
+	Scene(const Scene&) = delete;
+	Scene& operator=(const Scene&) = delete;
+
+	Scene(Scene&&) noexcept = default;
+	Scene& operator=(Scene&&) noexcept = default;
+
+	~Scene() override = default;
+
+	std::type_index getType() override;
 
 	auto getName() const -> const std::string&;
 	void setName(const std::string& name);
@@ -57,7 +62,7 @@ public:
 	bool hasComponent(const std::type_index& type) const;
 
 	Node* findNode(const std::string& name);
-	void  setRoot(Node& root);
+	void  setRoot(Node& node);
 	Node& getRoot();
 };
 

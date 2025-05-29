@@ -2,14 +2,21 @@
 
 #include <typeindex>
 
-static uint64_t id_counter = 0;
-
 class Object {
 private:
 	uint64_t uid;
 
+	static uint64_t id_counter;
+
 public:
 	Object();
+
+	Object(const Object&) = default;
+	Object& operator=(Object&) = default;
+
+	Object(Object&&) noexcept = default;
+	Object& operator=(Object&&) noexcept = default;
+
 	virtual ~Object() = default;
 
 	uint64_t getUid() const;
